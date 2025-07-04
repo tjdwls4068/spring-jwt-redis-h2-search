@@ -2,6 +2,8 @@ package runrun.demo.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Post {
 
@@ -12,6 +14,8 @@ public class Post {
     private String title;
     private String content;
     private String writer;
+    private LocalDateTime localDateTime = LocalDateTime.now();
+
 
     public Post() {}
 
@@ -52,5 +56,14 @@ public class Post {
     public void setWriter(String writer) {
         this.writer = writer;
     }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
     // Getter & Setter
 }

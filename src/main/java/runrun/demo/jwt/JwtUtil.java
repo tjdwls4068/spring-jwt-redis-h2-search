@@ -28,6 +28,7 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis()+ EXPIRATION_TIME)) // 만료
                 .signWith(key, SignatureAlgorithm.HS256) // 서명 알고리즘
                 .compact(); // 모든 설정 종합해서 String 만듬
+
     }
 
     // 토큰에서 사용자명 추출
