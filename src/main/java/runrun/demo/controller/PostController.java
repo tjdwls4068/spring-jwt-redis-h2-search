@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import runrun.demo.dto.PostRequestDto;
 import runrun.demo.dto.PostResponseDto;
 import runrun.demo.dto.ResponseDto;
 import runrun.demo.exception.NotFoundException;
@@ -64,27 +65,14 @@ public class PostController {
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
-            @RequestBody Post updatedPost,
+            @RequestBody PostRequestDto request,
             @RequestHeader("Authorization") String token
     ) {
 
         // 1. 토큰에서 사용자 이름 추출 (Bearer 제거 포함)
         String username = jwtUtil.getUsername(token.replace("Bearer ", ""));
 
-        // 2. 수정 대상 게시글 조회
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("게시글이 존재하지 않습니다."));
-
-        // 3. 현재 로그인한 사용자와 게시글 작성자 비교
-        if (!post.getWriter().equals(username)) {
-            throw new UnauthorizedException("작성자만 수정할 수 있습니다.");
-        }
-
-        // 4. 실제 수정
-        post.setTitle(updatedPost.getTitle());
-        post.setContent(updatedPost.getContent());
-
-        postRepository.save(post);
+        postService.updatePost(id, request, username);
 
         return ResponseEntity.ok("게시글 수정 완료");
     }
@@ -96,15 +84,8 @@ public class PostController {
     ) {
         String username = jwtUtil.getUsername(token.replace("Bearer ", ""));
 
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+        postService.deletePost(id, username);
 
-        if (!post.getWriter().equals(username)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("작성자만 삭제할 수 있습니다.");
-        }
-
-        postRepository.delete(post);
         return ResponseEntity.ok("게시글 삭제 완료");
     }
 
