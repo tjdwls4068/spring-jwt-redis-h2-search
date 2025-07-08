@@ -68,5 +68,10 @@ public class PostService {
 
     }
 
+    public List<Post> searchPosts(String keyword) {
+        return postRepository.findByTitleContainingOrWriterContainingOrContentContaining(keyword, keyword, keyword);
+    }
+
+
 
 }

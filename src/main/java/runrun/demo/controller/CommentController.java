@@ -3,6 +3,7 @@ package runrun.demo.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import runrun.demo.dto.CommentRequestDto;
 import runrun.demo.dto.ResponseDto;
 import runrun.demo.jwt.JwtUtil;
 import runrun.demo.model.Comment;
@@ -39,10 +40,10 @@ public class CommentController {
 
     @PutMapping("/posts/{postId}/comments/{commentsId}")
     public ResponseEntity<ResponseDto<String>> updateComment(@PathVariable Long commentId,
-                                                             @RequestBody Map<String, String> request,
+                                                             @RequestBody CommentRequestDto dto,
                                                              @RequestHeader("Authorization") String token) {
         String username = jwtUtil.getUsername(token.substring(7));
-        commentService.updateComment(commentId, request.get("content"), username);
+        commentService.updateComment(commentId, dto, username);
         return ResponseEntity.ok(ResponseDto.success("댓글 수정 완료", null));
     }
 

@@ -62,6 +62,7 @@ public class PostController {
         PostResponseDto dto = postService.getPostById(id);
         return ResponseEntity.ok(ResponseDto.success("게시글 조회 성공", dto));
     }
+
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
@@ -87,6 +88,12 @@ public class PostController {
         postService.deletePost(id, username);
 
         return ResponseEntity.ok("게시글 삭제 완료");
+    }
+
+    @GetMapping("/posts/search")
+    public ResponseEntity<ResponseDto<List<Post>>> searchPosts(@RequestParam("keyword") String keyword) {
+        List<Post> result = postService.searchPosts(keyword);
+        return ResponseEntity.ok(ResponseDto.success("검색성공", result));
     }
 
 }

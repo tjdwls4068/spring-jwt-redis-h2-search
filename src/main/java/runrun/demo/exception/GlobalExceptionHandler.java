@@ -31,4 +31,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDto<String>> handlerCustomException(CustomException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseDto.error(401, e.getMessage()));
     }
+
 }

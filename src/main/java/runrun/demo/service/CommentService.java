@@ -1,8 +1,10 @@
 package runrun.demo.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import runrun.demo.dto.CommentRequestDto;
 import runrun.demo.exception.CustomException;
 import runrun.demo.model.Comment;
 import runrun.demo.repository.CommentRepository;
@@ -27,17 +29,19 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
-    public void updateComment(Long commentId, String content, String username) {
+    @Transactional
+    public void updateComment(Long commentId, CommentRequestDto dto, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException("댓글을 찾을 수 없습니다."
                 , HttpStatus.NOT_FOUND));
         if (!comment.getWriter().equals(username)) {
             throw new CustomException("수정 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        comment.setContent(content);
+        comment.setContent(dto.getContent());
         commentRepository.save(comment);
     }
 
+    @Transactional
     public void deleteComment(Long commentId, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(()
                 -> new CustomException("댓글을 찾을 수 없습니다.", HttpStatus.UNAUTHORIZED));
@@ -49,4 +53,5 @@ public class CommentService {
         commentRepository.delete(comment);
 
     }
+
 }
