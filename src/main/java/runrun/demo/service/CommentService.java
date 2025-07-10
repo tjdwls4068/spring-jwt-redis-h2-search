@@ -54,4 +54,10 @@ public class CommentService {
 
     }
 
+    public List<Comment> searchCommentsByKeyword(String keyword) {
+        return commentRepository.findByContentContaining(keyword);
+    }
+
+
+
 }

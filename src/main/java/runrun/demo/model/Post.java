@@ -14,7 +14,7 @@ public class Post {
     private String title;
     private String content;
     private String writer;
-    private LocalDateTime localDateTime = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 
     public Post() {}
@@ -57,12 +57,12 @@ public class Post {
         this.writer = writer;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     // Getter & Setter

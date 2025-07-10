@@ -1,6 +1,8 @@
 package runrun.demo.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -70,6 +72,11 @@ public class PostService {
 
     public List<Post> searchPosts(String keyword) {
         return postRepository.findByTitleContainingOrWriterContainingOrContentContaining(keyword, keyword, keyword);
+    }
+
+    public Page<Post> getPostPage(Pageable pageable) {
+
+        return postRepository.findAll(pageable);
     }
 
 

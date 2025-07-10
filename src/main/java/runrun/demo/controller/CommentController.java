@@ -7,6 +7,7 @@ import runrun.demo.dto.CommentRequestDto;
 import runrun.demo.dto.ResponseDto;
 import runrun.demo.jwt.JwtUtil;
 import runrun.demo.model.Comment;
+import runrun.demo.repository.CommentRepository;
 import runrun.demo.service.CommentService;
 
 import java.util.List;
@@ -17,9 +18,19 @@ public class CommentController {
 
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
-    public CommentController(CommentService commentService, JwtUtil jwtUtil) {
+    private final CommentRepository commentRepository;
+    public CommentController(CommentService commentService, JwtUtil jwtUtil, CommentRepository commentRepository) {
         this.commentService = commentService;
         this.jwtUtil = jwtUtil;
+        this.commentRepository = commentRepository;
+    }
+
+    @GetMapping("my-comments")
+    public ResponseEntity<List<Comment>> getMyComments(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String username = jwtUtil.getUsername(token);
+        List<Comment> comments = commentRepository.findByWriter(username);
+        return ResponseEntity.ok(comments);
     }
 
     @PostMapping("/{postId}/comments")
@@ -57,4 +68,10 @@ public class CommentController {
 
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Comment>> searchComments(@RequestParam("keyword") String keyword) {
+
+        List<Comment> comments = commentService.searchCommentsByKeyword(keyword);
+        return ResponseEntity.ok(comments);
+    }
 }

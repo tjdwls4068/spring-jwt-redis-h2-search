@@ -20,6 +20,6 @@ public class PostResponseDto {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.writer = post.getTitle();
-        this.localDateTime = post.getLocalDateTime();
+        this.localDateTime = post.getCreatedAt();
     }
 }

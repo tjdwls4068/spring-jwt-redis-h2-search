@@ -1,5 +1,9 @@
 package runrun.demo.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -57,8 +61,17 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostsByWriter(username));
     }
 
+    @GetMapping("/my-posts")
+    public ResponseEntity<List<Post>> getMyPosts(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String username = jwtUtil.getUsername(token);
+        List<Post> posts = postRepository.findByWriter(username);
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/posts/{id}")
     public ResponseEntity<ResponseDto<PostResponseDto>> getPost(@PathVariable Long id) {
+
         PostResponseDto dto = postService.getPostById(id);
         return ResponseEntity.ok(ResponseDto.success("게시글 조회 성공", dto));
     }
@@ -96,5 +109,11 @@ public class PostController {
         return ResponseEntity.ok(ResponseDto.success("검색성공", result));
     }
 
+    @GetMapping("/posts")
+    public ResponseEntity<ResponseDto<Page<Post>>> getPostPage(@PageableDefault(size = 5, sort = "createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Post> posts = postService.getPostPage(pageable);
+        return ResponseEntity.ok(ResponseDto.success("게시글 목록(페이징)", posts));
+    }
 }
 
